@@ -24,9 +24,9 @@ app.use('/auth', authRoutes);
 app.use('/bugs', bugRoutes);
 
 mongoose.connect('mongodb://127.0.0.1:27017/bug-report-app')
-    .then(() => console.log('Connected to the db!'))
+    .then(() => console.log('Connected to database!'))
     .catch(() => console.log('err'));
 
 app.listen(PORT, () => {
-    console.log(`Example app listening on port ${PORT}`);
+    console.log(`Listening on port ${PORT}`);
 });
