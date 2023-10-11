@@ -16,9 +16,23 @@ export const createBug = async (req, res) => {
 }
 
 export const getAllBugs = async (req, res) => {
-    const bugs = await Bug.find();
-    console.log(bugs);
-    res.status(200).send(bugs);
+    
+    const { role, id } = req.user;
+
+    try {
+        //const user = await User.findById(userId);
+        let bugs = [];
+        if (role === ROLES.QA) {
+            bugs = await Bug.find({ reportedBy: id })
+        } else {
+            bugs = await Bug.find({ assignedTo: id });
+        }
+
+        return res.status(200).send(bugs);
+
+    } catch (e) {
+        res.status(500).send('Could not fetch bugs');
+    }
 }
 
 export const changeCompletedStatus = async (req, res) => {
@@ -33,23 +47,3 @@ export const changeCompletedStatus = async (req, res) => {
     }
 }
 
-export const getBugsByUserId = async (req, res) => {
-    const { userId } = req.params;
-    const { role } = req.user;
-
-    try {
-        //const user = await User.findById(userId);
-        let bugs = [];
-        if (role === ROLES.QA) {
-            bugs = await Bug.find({ reportedBy: userId })
-        } else {
-            bugs = await Bug.find({ assignedTo: userId });
-        }
-
-        return res.status(200).send(bugs);
-
-    } catch (e) {
-        res.status(500).send('Could not fetch bugs');
-    }
-
-}
